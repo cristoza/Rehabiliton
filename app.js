@@ -1,10 +1,22 @@
-const express = require('express');
+
 const path = require('path');
-const app = express();
+
 const port = 3000;
 
+
+const express = require('express');
+const app = express();
+
+app.use(express.urlencoded({ extended: true })); // Para leer formularios POST
+app.use(express.json()); // Si quieres leer JSON también
+
+// Rutas admin
+const adminRoutes = require('./admin/routes/adminRoutes');
+app.use('/admin', adminRoutes);
 // Importar las rutas de citas
 const citaRoutes = require('./routes/citaRoutes');
+
+
 
 // Configurar Express para usar EJS como motor de plantillas
 app.set('view engine', 'ejs');
@@ -31,3 +43,4 @@ app.use('/citas', citaRoutes);
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
 });
+

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gestión de Sesiones</title>
+</head>
+<body>
+  <h1>Listado de Sesiones</h1>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID Sesión</th>
+        <th>Terapeuta</th>
+        <th>Paciente</th>
+        <th>Fecha</th>
+        <th>Hora Inicio</th>
+        <th>Hora Fin</th>
+        <th>Requiere Máquina</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (sesiones.length > 0) { %>
+        <% sesiones.forEach(s => { %>
+          <tr>
+            <td><%= s.id_sesion %></td>
+            <td><%= s.nombre_terapista %> <%= s.apellido_terapista %></td>
+            <td><%= s.nombre_paciente %> <%= s.apellido_paciente %></td>
+            <td><%= s.fecha_sesion.toISOString().split('T')[0] %></td>
+            <td><%= s.hora_inicio %></td>
+            <td><%= s.hora_fin %></td>
+            <td><%= s.requiere_maquina ? 'Sí' : 'No' %></td>
+            <td><%= s.estado_sesion %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr><td colspan="8">No hay sesiones registradas.</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <h2>Agregar Sesión</h2>
+  <form action="/admin/sesiones" method="POST">
+    <label for="id_terapista">ID Terapeuta:</label>
+    <input type="number" name="id_terapista" required><br />
+
+    <label for="id_paciente">ID Paciente:</label>
+    <input type="number" name="id_paciente" required><br />
+
+    <label for="fecha_sesion">Fecha:</label>
+    <input type="date" name="fecha_sesion" required><br />
+
+    <label for="hora_inicio">Hora Inicio:</label>
+    <input type="time" name="hora_inicio" required><br />
+
+    <label for="hora_fin">Hora Fin:</label>
+    <input type="time" name="hora_fin" required><br />
+
+    <label for="requiere_maquina">¿Requiere máquina?</label>
+    <select name="requiere_maquina">
+      <option value="false" selected>No</option>
+      <option value="true">Sí</option>
+    </select><br />
+
+    <label for="estado_sesion">Estado:</label>
+    <select name="estado_sesion">
+      <option value="Agendada" selected>Agendada</option>
+      <option value="Completada">Completada</option>
+      <option value="Cancelada">Cancelada</option>
+    </select><br /><br />
+
+    <button type="submit">Guardar</button>
+  </form>
+</body>
+</html>
