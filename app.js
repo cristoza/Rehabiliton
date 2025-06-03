@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Ruta principal GET /
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+  res.redirect('/citas/reservar');
 });
 
 console.log('Conectando a la base de datos:', process.env.DATABASE_URL);
