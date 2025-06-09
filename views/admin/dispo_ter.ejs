@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Disponibilidad de Terapeutas</title>
+</head>
+<body>
+  <h1>Disponibilidad de Terapeutas</h1>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Terapeuta</th>
+        <th>Día de la semana</th>
+        <th>Hora inicio</th>
+        <th>Hora fin</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (disponibilidad.length > 0) { %>
+        <% disponibilidad.forEach(d => { %>
+          <tr>
+            <td><%= d.id_disponibilidad %></td>
+            <td><%= d.nombre %> <%= d.apellido %></td>
+            <td><%= d.dia_semana %></td>
+            <td><%= d.hora_inicio %></td>
+            <td><%= d.hora_fin %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr><td colspan="5">No hay disponibilidad registrada.</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <h2>Agregar Disponibilidad</h2>
+  <form action="/admin/dispo_ter" method="POST">
+    <label for="id_terapista">Terapeuta:</label>
+    <input type="number" name="id_terapista" required><br>
+
+    <label for="dia_semana">Día de la semana:</label>
+    <select name="dia_semana" required>
+      <option value="Lunes">Lunes</option>
+      <option value="Martes">Martes</option>
+      <option value="Miércoles">Miércoles</option>
+      <option value="Jueves">Jueves</option>
+      <option value="Viernes">Viernes</option>
+      <option value="Sábado">Sábado</option>
+      <option value="Domingo">Domingo</option>
+    </select><br>
+
+    <label for="hora_inicio">Hora inicio:</label>
+    <input type="time" name="hora_inicio" required><br>
+
+    <label for="hora_fin">Hora fin:</label>
+    <input type="time" name="hora_fin" required><br>
+
+    <button type="submit">Guardar</button>
+  </form>
+</body>
+</html>

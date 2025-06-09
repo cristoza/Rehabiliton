@@ -1,31 +1,42 @@
-const pool = require('../config/db');
- // Importa la conexión a PostgreSQL
+// controllers/citaController.js
+const { reservarCita, getDisponibilidadTerapista } = require('../models/citaModel');
 
-const verDisponibilidad = async (req, res) => {
+const mostrarFormularioReserva = async (req, res) => {
   try {
-    // Ejemplo: consulta para obtener la disponibilidad de terapeutas (ajusta según tu esquema)
-    const resultado = await pool.query('SELECT * FROM disponibilidad_terapeutas');
-    res.json(resultado.rows); // Envía los datos en formato JSON
+    const disponibilidad = await getDisponibilidadTerapista();
+    res.render('reservar', {
+      disponibilidad,
+      query: req.query // 👈 esta línea es clave
+    });
   } catch (error) {
-    console.error('Error al obtener disponibilidad:', error);
-    res.status(500).send('Error al obtener la disponibilidad');
+    console.error('Error al mostrar formulario:', error);
+    res.status(500).send('Error al cargar la vista');
   }
 };
 
-const reservarCita = async (req, res) => {
-  const { terapeuta_id, fecha, hora, cliente } = req.body;
+
+const procesarReserva = async (req, res) => {
+  const { id_terapista, id_paciente, fecha_sesion, hora_inicio, hora_fin, requiere_maquina } = req.body;
 
   try {
-    // Inserta una nueva cita en la tabla citas (ajusta nombres y columnas a tu DB)
-    await pool.query(
-      'INSERT INTO citas (terapeuta_id, fecha, hora, cliente) VALUES ($1, $2, $3, $4)',
-      [terapeuta_id, fecha, hora, cliente]
+    const cita = await reservarCita(
+      parseInt(id_terapista),
+      parseInt(id_paciente),
+      fecha_sesion,
+      hora_inicio,
+      hora_fin,
+      requiere_maquina === 'true'
     );
-    res.status(201).send('Cita reservada exitosamente');
+
+    if (cita) {
+      res.redirect('/citas/reservar?exito=1');
+    } else {
+      res.redirect('/citas/reservar?error=1');
+    }
   } catch (error) {
-    console.error('Error al reservar cita:', error);
-    res.status(500).send('Error al reservar la cita');
+    console.error('Error al procesar reserva:', error);
+    res.status(500).send('Error al procesar la reserva');
   }
 };
 
-module.exports = { verDisponibilidad, reservarCita };
+module.exports = { mostrarFormularioReserva, procesarReserva };

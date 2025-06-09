@@ -1,0 +1,51 @@
+<!-- views/reservar.ejs -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reservar Sesión</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <h1>Reservar una sesión de terapia</h1>
+
+  <% if (typeof disponibilidad !== 'undefined' && disponibilidad.length > 0) { %>
+    <form action="/citas/reservar" method="POST">
+      <label for="id_paciente">ID del paciente:</label>
+      <input type="number" name="id_paciente" required><br>
+
+      <label for="id_terapista">Terapista:</label>
+      <select name="id_terapista" required>
+        <% disponibilidad.forEach(item => { %>
+          <option value="<%= item.id_terapista %>">Terapista <%= item.id_terapista %> - <%= item.dia_semana %> de <%= item.hora_inicio %> a <%= item.hora_fin %></option>
+        <% }); %>
+      </select><br>
+
+      <label for="fecha_sesion">Fecha:</label>
+      <input type="date" name="fecha_sesion" required><br>
+
+      <label for="hora_inicio">Hora de inicio:</label>
+      <input type="time" name="hora_inicio" required><br>
+
+      <label for="hora_fin">Hora de fin:</label>
+      <input type="time" name="hora_fin" required><br>
+
+      <label for="requiere_maquina">¿Requiere máquina?</label>
+      <select name="requiere_maquina">
+        <option value="false">No</option>
+        <option value="true">Sí</option>
+      </select><br><br>
+
+      <button type="submit">Reservar sesión</button>
+    </form>
+  <% } else { %>
+    <p>No hay disponibilidad registrada en el sistema.</p>
+  <% } %>
+
+  <% if (query.exito) { %>
+    <p style="color:green;">¡Sesión registrada con éxito!</p>
+  <% } else if (query.error) { %>
+    <p style="color:red;">Ocurrió un error al registrar la sesión.</p>
+  <% } %>
+</body>
+</html>
